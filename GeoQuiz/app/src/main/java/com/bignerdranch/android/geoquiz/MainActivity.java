@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -16,9 +17,10 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    private final String KEY_INDEX = "index";
+
     private QuizViewModel quizViewModel = null;
     private TextView questionTextView = null;   // = findViewById(R.id.question_text_view);
-    private String KEY_INDEX = "index";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,10 +36,12 @@ public class MainActivity extends AppCompatActivity {
         this.questionTextView = findViewById(R.id.question_text_view);
         Button trueButton = findViewById(R.id.true_button);
         Button falseButton = findViewById(R.id.false_button);
+        Button cheatButton = findViewById(R.id.cheat_button);
         Button nextButton = findViewById(R.id.next_button);
-        int currentQuestionIndex = savedInstanceState == null?
-            0:
-            savedInstanceState.getInt(KEY_INDEX, 0);
+        int currentQuestionIndex = savedInstanceState == null
+            ? 0
+            : savedInstanceState.getInt(KEY_INDEX, 0)
+        ;
         this.quizViewModel.currentQuestionIndex = currentQuestionIndex;
         // endregion
 
@@ -61,6 +65,15 @@ public class MainActivity extends AppCompatActivity {
                 //     Toast.LENGTH_SHORT
                 // ).show();
                 checkAnswer(false);
+            }
+        });
+        cheatButton.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View view) {
+                // start cheat activity;
+                startActivity(CheatActivity.newIntent(
+                    MainActivity.this,
+                    quizViewModel.getCurrentQuestionAnswer()
+                ));
             }
         });
         nextButton.setOnClickListener(new View.OnClickListener() {
