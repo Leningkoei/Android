@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    // aaa;
 
     private QuizViewModel quizViewModel = null;
     private TextView questionTextView = null;   // = findViewById(R.id.question_text_view);
