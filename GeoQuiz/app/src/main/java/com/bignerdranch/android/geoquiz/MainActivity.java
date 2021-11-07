@@ -54,8 +54,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         falseButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+            @Override public void onClick(View view) {
                 // Toast.makeText(
                 //     mainActivityContext,
                 //     R.string.incorrect_toast,
