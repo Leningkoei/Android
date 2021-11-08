@@ -1,9 +1,14 @@
 package com.bignerdranch.android.geoquiz;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContract;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,15 +17,20 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class MainActivity extends AppCompatActivity {
-
     private final String KEY_INDEX = "index";
 
     private QuizViewModel quizViewModel = null;
     private TextView questionTextView = null;   // = findViewById(R.id.question_text_view);
+
+    ActivityResultLauncher launcher = registerForActivityResult(
+        new ResultContract(),
+        new ActivityResultCallback<Boolean>() {
+        @Override
+        public void onActivityResult(Boolean result) {
+            quizViewModel.isCheater = result;
+        }
+    });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,10 +80,11 @@ public class MainActivity extends AppCompatActivity {
         cheatButton.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
                 // start cheat activity;
-                startActivity(CheatActivity.newIntent(
-                    MainActivity.this,
-                    quizViewModel.getCurrentQuestionAnswer()
-                ));
+                // startActivity(CheatActivity.newIntent(
+                //     MainActivity.this,
+                //     quizViewModel.getCurrentQuestionAnswer()
+                // ));
+                launcher.launch(quizViewModel.getCurrentQuestionAnswer());
             }
         });
         nextButton.setOnClickListener(new View.OnClickListener() {
@@ -99,23 +110,50 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
 
-        savedInstanceState.putInt(this.KEY_INDEX, this.quizViewModel.currentQuestionIndex);
+        savedInstanceState.putInt(
+            this.KEY_INDEX,
+            this.quizViewModel.currentQuestionIndex
+        );
     }
 
     private void updateQuestion() {
-
         // int questionTextResId =
         //     questionBank.get(currentQuestionIndex).textResId;
         int questionTextResId = this.quizViewModel.getCurrentQuestionText();
         this.questionTextView.setText(questionTextResId);
     }
     private void checkAnswer(boolean userAnswer) {
-
         // boolean correctAnswer = questionBank.get(currentQuestionIndex).answer;
         boolean correctAnswer = this.quizViewModel.getCurrentQuestionAnswer();
-        int messageResId = userAnswer == correctAnswer?
-            R.string.correct_toast:
-            R.string.incorrect_toast;
+        int messageResId = this.quizViewModel.isCheater
+            ? R.string.judgment_toast
+            : userAnswer == correctAnswer
+                ? R.string.correct_toast
+                : R.string.incorrect_toast
+        ;
         Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show();
+    }
+
+    class ResultContract extends ActivityResultContract<Boolean, Boolean> {
+        @NonNull
+        @Override
+        public Intent createIntent(@NonNull Context context, Boolean input) {
+            return CheatActivity.newIntent(
+                MainActivity.this,
+                quizViewModel.getCurrentQuestionAnswer()
+            );
+        }
+        @Override
+        public Boolean parseResult(int resultCode, @Nullable Intent intent) {
+            if (resultCode == Activity.RESULT_OK) {
+                boolean isCheater = intent.getBooleanExtra(
+                "isCheater",
+                false
+                );
+                return isCheater;
+            } else {
+                return false;
+            }
+        }
     }
 }
