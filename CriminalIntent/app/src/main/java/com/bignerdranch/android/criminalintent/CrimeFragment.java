@@ -70,8 +70,9 @@ public class CrimeFragment extends Fragment {
                 @Override
                 public void afterTextChanged(Editable sequence) {
                     // This space intentionally;
+                }
             }
-        });
+        );
         this.dateButton.setEnabled(false);
         this.dateButton.setText(crime.date.toString());
 
