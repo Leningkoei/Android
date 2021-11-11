@@ -1,6 +1,7 @@
 package com.bignerdranch.android.criminalintent;
 
 import android.os.Bundle;
+import android.os.MessageQueue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,6 +51,7 @@ public class CrimeListFragment extends Fragment {
         this.crimeRecyclerView.setLayoutManager(
             new LinearLayoutManager(this.getContext())
         );
+
         this.updateUI();
 
         return view;
@@ -59,44 +61,59 @@ public class CrimeListFragment extends Fragment {
         List<Crime> crimes = this.crimeListViewModel.crimes;
         this.crimeAdapter = new CrimeAdapter(crimes);
         this.crimeRecyclerView.setAdapter(crimeAdapter);
+
     }
 
-    private class CrimeHolder extends RecyclerView.ViewHolder {
+    private static class CrimeHolder extends RecyclerView.ViewHolder {
 
-        public TextView textView = null;
-        public TextView dateTextView = null;
+        private Crime crime = null;
+        private TextView titleTextView = null;
+        private TextView dateTextView = null;
 
         // Constructor matching super;
-        public CrimeHolder(@NonNull View itemView) {
+        private CrimeHolder(@NonNull View itemView) {
             super(itemView);
 
-            this.textView = itemView.findViewById(R.id.crime_title);
+            this.titleTextView = itemView.findViewById(R.id.crime_title);
             this.dateTextView = itemView.findViewById(R.id.crime_date);
+        }
+
+        private void bind(Crime crime) {
+            this.crime = crime;
+            this.titleTextView.setText(this.crime.title);
+            this.dateTextView.setText(this.crime.date.toString());
         }
     }
     private class CrimeAdapter extends RecyclerView.Adapter<CrimeHolder> {
 
         private List<Crime> crimes = null;
 
-        public CrimeAdapter(List<Crime> crimes) {
+        private CrimeAdapter(List<Crime> crimes) {
             this.crimes = crimes;
         }
 
         // 至少要覆盖3个函数;
+        @NonNull
         @Override
-        public CrimeHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = getLayoutInflater().inflate(
+        public CrimeHolder onCreateViewHolder(
+            @NonNull ViewGroup parent,
+            int viewType
+        ) {
+            View view = CrimeListFragment.this.getLayoutInflater().inflate(
+                // 只能通过 外部类类名.this.成员 来有修饰地访问外部类的成员吗?
                 R.layout.list_item_crime,
                 parent,
                 false
             );
             return new CrimeHolder(view);
         }
+        // 注意使这个函数"轻巧高效";
         @Override
         public void onBindViewHolder(CrimeHolder holder, int position) {
             Crime crime = this.crimes.get(position);
-            holder.textView.setText(crime.title);
-            holder.dateTextView.setText(crime.date.toString());
+            // holder.titleTextView.setText(crime.title);
+            // holder.dateTextView.setText(crime.date.toString());
+            holder.bind(crime);
         }
         @Override
         public int getItemCount() {
