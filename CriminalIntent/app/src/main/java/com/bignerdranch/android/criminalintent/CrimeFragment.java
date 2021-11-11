@@ -12,9 +12,11 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 public class CrimeFragment extends Fragment {
 
+    private CrimeListViewModel crimeListViewModel = null;
     private Crime crime = null;
     private EditText titleField = null;
     private Button dateButton = null;

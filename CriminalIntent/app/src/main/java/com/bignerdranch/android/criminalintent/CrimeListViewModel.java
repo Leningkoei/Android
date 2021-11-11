@@ -14,7 +14,7 @@ public class CrimeListViewModel extends ViewModel {
             Crime crime = new Crime();
             crime.title = "Crime#" + i;
             crime.isSolved = i % 2 == 0;
-            crimes.set(i, crime);
+            crimes.add(crime);
         }
     }
 }
