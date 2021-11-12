@@ -5,7 +5,9 @@ import android.os.MessageQueue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -61,14 +63,15 @@ public class CrimeListFragment extends Fragment {
         List<Crime> crimes = this.crimeListViewModel.crimes;
         this.crimeAdapter = new CrimeAdapter(crimes);
         this.crimeRecyclerView.setAdapter(crimeAdapter);
-
     }
 
-    private static class CrimeHolder extends RecyclerView.ViewHolder {
+    // 外部类和内部类可以互相访问私有成员;
+    private class CrimeHolder extends RecyclerView.ViewHolder {
 
         private Crime crime = null;
         private TextView titleTextView = null;
         private TextView dateTextView = null;
+        private ImageView solvedImageView = null;
 
         // Constructor matching super;
         private CrimeHolder(@NonNull View itemView) {
@@ -76,12 +79,29 @@ public class CrimeListFragment extends Fragment {
 
             this.titleTextView = itemView.findViewById(R.id.crime_title);
             this.dateTextView = itemView.findViewById(R.id.crime_date);
+            this.solvedImageView = itemView.findViewById(R.id.crime_solved);
+
+            this.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(
+                        CrimeListFragment.this.getContext(),
+                        crime.title + "pressed!",
+                        Toast.LENGTH_SHORT
+                    ).show();
+                }
+            });
         }
 
         private void bind(Crime crime) {
             this.crime = crime;
             this.titleTextView.setText(this.crime.title);
             this.dateTextView.setText(this.crime.date.toString());
+            this.solvedImageView.setVisibility(
+                crime.isSolved
+                    ? View.VISIBLE
+                    : View.GONE
+            );
         }
     }
     private class CrimeAdapter extends RecyclerView.Adapter<CrimeHolder> {
@@ -93,6 +113,7 @@ public class CrimeListFragment extends Fragment {
         }
 
         // 至少要覆盖3个函数;
+        // 必须修饰为 public;
         @NonNull
         @Override
         public CrimeHolder onCreateViewHolder(
