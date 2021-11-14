@@ -2,6 +2,7 @@ package com.bignerdranch.android.criminalintent;
 
 import android.os.Bundle;
 import android.os.MessageQueue;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +16,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class CrimeListFragment extends Fragment {
 
@@ -53,16 +56,33 @@ public class CrimeListFragment extends Fragment {
         this.crimeRecyclerView.setLayoutManager(
             new LinearLayoutManager(this.getContext())
         );
+        // this.crimeRecyclerView.setAdapter(this.crimeAdapter);
+        this.crimeRecyclerView.setAdapter(new CrimeAdapter(
+            new ArrayList<Crime>()
+        ));
 
-        this.updateUI();
+        // this.updateUI();
 
         return view;
     }
+    @Override
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-    private void updateUI() {
-        List<Crime> crimes = this.crimeListViewModel.crimes;
+        this.crimeListViewModel.crimeListLiveData.observe(
+            this.getViewLifecycleOwner(),
+            crimes -> {
+                Log.d("nmsl", crimes.toString());
+                this.updateUI(crimes);
+            }
+        );
+    }
+
+    private void updateUI(List<Crime> crimes) {
+        // List<Crime> crimes = this.crimeListViewModel.crimes;
         this.crimeAdapter = new CrimeAdapter(crimes);
-        this.crimeRecyclerView.setAdapter(crimeAdapter);
+        this.crimeRecyclerView.setAdapter(this.crimeAdapter);
+        Log.d("nmsl", crimes.toString());
     }
 
     // 外部类和内部类可以互相访问私有成员;
@@ -86,7 +106,8 @@ public class CrimeListFragment extends Fragment {
                 public void onClick(View view) {
                     Toast.makeText(
                         CrimeListFragment.this.getContext(),
-                        crime.title + "pressed!",
+                        // crime.title + "pressed!",
+                        crime.getTitle() + "pressed!",
                         Toast.LENGTH_SHORT
                     ).show();
                 }
@@ -95,10 +116,13 @@ public class CrimeListFragment extends Fragment {
 
         private void bind(Crime crime) {
             this.crime = crime;
-            this.titleTextView.setText(this.crime.title);
-            this.dateTextView.setText(this.crime.date.toString());
+            // this.titleTextView.setText(this.crime.title);
+            this.titleTextView.setText(this.crime.getTitle());
+            // this.dateTextView.setText(this.crime.date.toString());
+            this.dateTextView.setText(this.crime.getDate().toString());
             this.solvedImageView.setVisibility(
-                crime.isSolved
+                // crime.isSolved
+                crime.getIsSolved()
                     ? View.VISIBLE
                     : View.GONE
             );

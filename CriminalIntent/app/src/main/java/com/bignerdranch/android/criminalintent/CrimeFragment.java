@@ -16,7 +16,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 public class CrimeFragment extends Fragment {
 
-    private CrimeListViewModel crimeListViewModel = null;
+    // private CrimeListViewModel crimeListViewModel = null;
     private Crime crime = null;
     private EditText titleField = null;
     private Button dateButton = null;
@@ -67,7 +67,8 @@ public class CrimeFragment extends Fragment {
                     int before,
                     int count
                 ) {
-                    crime.title = sequence.toString();
+                    // crime.title = sequence.toString();
+                    crime.setTitle(sequence.toString());
                 }
                 @Override
                 public void afterTextChanged(Editable sequence) {
@@ -76,7 +77,8 @@ public class CrimeFragment extends Fragment {
             }
         );
         this.dateButton.setEnabled(false);
-        this.dateButton.setText(crime.date.toString());
+        // this.dateButton.setText(crime.date.toString());
+        this.dateButton.setText(crime.getDate().toString());
 
         return view;
     }
@@ -97,7 +99,8 @@ public class CrimeFragment extends Fragment {
         // );
         this.solvedCheckBox.setOnCheckedChangeListener(
             (compoundButton, isChecked) -> {
-                crime.isSolved = isChecked;
+                // crime.isSolved = isChecked;
+                crime.setIsSolved(isChecked);
             }
         );
     }
