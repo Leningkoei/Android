@@ -8,20 +8,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
 public class CrimeFragment extends Fragment {
 
-    // private CrimeListViewModel crimeListViewModel = null;
     private Crime crime = null;
     private EditText titleField = null;
     private Button dateButton = null;
     private CheckBox solvedCheckBox = null;
-    // private CheckBox
 
     // Pay attention  onCreate function here is a public function, but in Main-
     //    Activity is a protected function;
@@ -68,7 +64,7 @@ public class CrimeFragment extends Fragment {
                     int count
                 ) {
                     // crime.title = sequence.toString();
-                    crime.setTitle(sequence.toString());
+                    crime.title = sequence.toString();
                 }
                 @Override
                 public void afterTextChanged(Editable sequence) {
@@ -78,7 +74,7 @@ public class CrimeFragment extends Fragment {
         );
         this.dateButton.setEnabled(false);
         // this.dateButton.setText(crime.date.toString());
-        this.dateButton.setText(crime.getDate().toString());
+        this.dateButton.setText(crime.date.toString());
 
         return view;
     }
@@ -100,7 +96,7 @@ public class CrimeFragment extends Fragment {
         this.solvedCheckBox.setOnCheckedChangeListener(
             (compoundButton, isChecked) -> {
                 // crime.isSolved = isChecked;
-                crime.setIsSolved(isChecked);
+                crime.isSolved = isChecked;
             }
         );
     }

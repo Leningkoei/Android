@@ -1,7 +1,6 @@
 package com.bignerdranch.android.criminalintent;
 
 import android.os.Bundle;
-import android.os.MessageQueue;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class CrimeListFragment extends Fragment {
 
@@ -107,7 +105,7 @@ public class CrimeListFragment extends Fragment {
                     Toast.makeText(
                         CrimeListFragment.this.getContext(),
                         // crime.title + "pressed!",
-                        crime.getTitle() + "pressed!",
+                        crime.title + "pressed!",
                         Toast.LENGTH_SHORT
                     ).show();
                 }
@@ -117,12 +115,12 @@ public class CrimeListFragment extends Fragment {
         private void bind(Crime crime) {
             this.crime = crime;
             // this.titleTextView.setText(this.crime.title);
-            this.titleTextView.setText(this.crime.getTitle());
+            this.titleTextView.setText(this.crime.title);
             // this.dateTextView.setText(this.crime.date.toString());
-            this.dateTextView.setText(this.crime.getDate().toString());
+            this.dateTextView.setText(this.crime.date.toString());
             this.solvedImageView.setVisibility(
                 // crime.isSolved
-                crime.getIsSolved()
+                crime.isSolved
                     ? View.VISIBLE
                     : View.GONE
             );
