@@ -1,7 +1,5 @@
 package com.bignerdranch.android.criminalintent.database
 
-import android.os.Parcel
-import android.os.Parcelable
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
