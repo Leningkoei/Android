@@ -1,6 +1,4 @@
 #   GoogleMapTest
--   直接上传GayHub之后会被提示 API Key 被暴露, 所以稍微匿名下 API Key<br>
-    <img src = './readme_images/img.png'>
 -   运行步骤和结果截图
     -   设置当前位置<br>
         <img src = './readme_images/img_1.png' width = '480'>
